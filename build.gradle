@@ -109,7 +109,7 @@ repositories {
 
 dependencies {
     // Must use the '-neoforge' version on NeoForge. If on regular forge, omit the '-neoforge'
-    implementation 'thedarkcolour:kotlinforforge-neoforge:5.3.0'
+    implementation 'thedarkcolour:kotlinforforge-neoforge:5.4.0'
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
