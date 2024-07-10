@@ -1,6 +1,13 @@
 package example.examplemod
 
 import example.examplemod.block.ModBlocks
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import net.minecraft.client.Minecraft
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
@@ -13,6 +20,7 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 import thedarkcolour.kotlinforforge.neoforge.forge.runForDist
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * Main mod class. Should be an `object` declaration annotated with `@Mod`.
@@ -46,6 +54,21 @@ object ExampleMod {
             })
 
         println(obj)
+
+        @Serializable
+        data class MySerializedThing(
+            val name: String,
+            val number: Int
+        )
+        val testObject = MySerializedThing("KotlinForForge", 712)
+        val json = Json.encodeToString(testObject)
+        LOGGER.log(Level.INFO, "--- JSON: $json")
+
+        CoroutineScope(Dispatchers.Default).launch {
+            LOGGER.log(Level.INFO, "Before delay")
+            delay(5.seconds)
+            LOGGER.log(Level.INFO, "After 5 seconds")
+        }
     }
 
     /**
