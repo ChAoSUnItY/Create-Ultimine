@@ -2,6 +2,22 @@
 Provides an example mod written in Kotlin using Kotlin for Forge.
 
 ## IMPORTANT:
+If your mod uses another library that is written in Kotlin (like OkHttp3) you will need to use the slim artifact of KFF instead.
+```groovy
+dependencies {
+    // Use slim artifact of KFF
+    implementation('thedarkcolour:kotlinforforge-neoforge:VERSION:slim')
+    
+    // Add Kotlin libs as non-mc libs in ModDevGradle
+    additionalRuntimeClasspath ('org.jetbrains.kotlin:kotlin-stdlib')
+    additionalRuntimeClasspath ('org.jetbrains.kotlin:kotlin-reflect')
+    additionalRuntimeClasspath ('org.jetbrains.kotlinx:kotlinx-coroutines-core')
+    additionalRuntimeClasspath ('org.jetbrains.kotlinx:kotlinx-serialization-core')
+    additionalRuntimeClasspath ('org.jetbrains.kotlinx:kotlinx-serialization-json')
+}
+```
+
+ALSO:  
 Debugging with Coroutines is currently broken due to an issue [with JPMS and IntelliJ](https://youtrack.jetbrains.com/issue/KTIJ-15750/Debugger-doesnt-work-at-all-in-Java-projects-with-enabled-Kotlin-plugin-and-coroutine-debugger#focus=Comments-27-4923828.0-0). You might see an error like this upon running the game in Debug Mode:
 ```
 Exception in thread "main" java.lang.NoClassDefFoundError: kotlin/Result
