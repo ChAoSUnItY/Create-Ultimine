@@ -28,6 +28,7 @@ public class UltimineMixin {
                     value = "INVOKE_ASSIGN",
                     target = "Ldev/ftb/mods/ftbultimine/FTBUltiminePlayerData;updateBlocks(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;ZI)Ldev/ftb/mods/ftbultimine/shape/ShapeContext;"
             ),
+            cancellable = true,
             locals = LocalCapture.CAPTURE_FAILHARD)
     private void injectBlockRightClick(
             Player player,
@@ -43,9 +44,9 @@ public class UltimineMixin {
         if (shapeContext != null && data.isPressed() && data.hasCachedPositions()) {
             int didWork = 0;
 
-            if (CreateUltimineServerConfig.getConfig().getRIGHT_CLICK_ALLOY().get() && RightClickHandlers.INSTANCE.getAlloyApplications().containsKey(serverPlayer.getItemInHand(hand).getItem())) {
+            if (CreateUltimineServerConfig.getRIGHT_CLICK_ALLOY().get() && RightClickHandlers.INSTANCE.getAlloyApplications().containsKey(serverPlayer.getItemInHand(hand).getItem())) {
                 didWork = RightClickHandlers.INSTANCE.alloyApply(serverPlayer, hand, clickPos, data);
-            } else if (CreateUltimineServerConfig.getConfig().getRIGHT_CLICK_WRENCH().get() && serverPlayer.getItemInHand(hand).getItem() == AllItems.WRENCH.get()) {
+            } else if (CreateUltimineServerConfig.getRIGHT_CLICK_WRENCH().get() && serverPlayer.getItemInHand(hand).getItem() == AllItems.WRENCH.get()) {
                 didWork = RightClickHandlers.INSTANCE.onWrenchUse(serverPlayer, hand, blockHitResult, data);
             }
 

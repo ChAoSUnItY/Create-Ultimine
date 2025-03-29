@@ -1,32 +1,36 @@
 package io.github.chaosunity.createultimine.config
 
-import net.neoforged.neoforge.common.ModConfigSpec
+import dev.ftb.mods.ftblibrary.snbt.config.BooleanValue
+import dev.ftb.mods.ftblibrary.snbt.config.ConfigUtil
+import dev.ftb.mods.ftblibrary.snbt.config.SNBTConfig
+import net.minecraft.server.MinecraftServer
 
-class CreateUltimineServerConfig(builder: ModConfigSpec.Builder) {
-    companion object {
-        @JvmStatic
-        private val pair = ModConfigSpec.Builder().configure(::CreateUltimineServerConfig)
+object CreateUltimineServerConfig {
+    @JvmStatic
+    val CONFIG: SNBTConfig = SNBTConfig.create("createultimine-server").comment<SNBTConfig>(
+        "Server-specific configuration for Create Ultimine",
+        "This file is meant for server administrators to control user behaviour.",
+        "Changes in this file currently require a server restart to take effect"
+    )
 
-        @JvmStatic
-        val config: CreateUltimineServerConfig = pair.left
+    @JvmStatic
+    val FEATURES: SNBTConfig = CONFIG.addGroup("features")
 
-        @JvmStatic
-        val configSpec: ModConfigSpec = pair.right
-    }
+    @JvmStatic
+    val RIGHT_CLICK_ALLOY: BooleanValue = FEATURES
+        .addBoolean("right_click_alloy", true)
+        .comment("Right-click with an alloy ingot (e.g. andesite alloy) with the Ultimine key held to apply on stripped logs or casings")
 
-    var RIGHT_CLICK_ALLOY: ModConfigSpec.BooleanValue
-    var RIGHT_CLICK_WRENCH: ModConfigSpec.BooleanValue
+    @JvmStatic
+    val RIGHT_CLICK_WRENCH: BooleanValue = FEATURES
+        .addBoolean("right_click_wrench", true)
+        .comment("Right-click with an wrench with the Ultimine key held to interact blocks (e.g. rotate, breaking)")
 
-    init {
-        builder.comment("General Settings").push("general")
-
-        RIGHT_CLICK_ALLOY = builder
-            .comment("Right-click with an alloy ingot (e.g. andesite alloy) with the Ultimine key held to apply on stripped logs or casings")
-            .define("right_click_alloy", true)
-        RIGHT_CLICK_WRENCH = builder
-            .comment("Right-click with an wrench with the Ultimine key held to interact blocks (e.g. rotate, breaking)")
-            .define("right_click_wrench", true)
-
-        builder.pop()
+    fun load(server: MinecraftServer) {
+        ConfigUtil.loadDefaulted(
+            CONFIG,
+            server.getWorldPath(ConfigUtil.SERVER_CONFIG_DIR),
+            "createultimine"
+        )
     }
 }
