@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "io.github.chaosunity.createultimine.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "UltimineMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

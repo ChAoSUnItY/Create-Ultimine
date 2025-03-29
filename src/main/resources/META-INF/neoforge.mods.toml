@@ -4,11 +4,13 @@ modLoader="kotlinforforge"
 loaderVersion="${loader_version_range}"
 license='${mod_license}'
 
+[[mixins]]
+config = "createultimine.mixins.json"
+
 [[mods]]
 modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
-credits="Thanks to thedarkcolour and all the contributors for making Kotlin for Forge"
 authors="${mod_authors}"
 description='''${mod_description}'''
 [[dependencies.${mod_id}]]
@@ -21,6 +23,18 @@ description='''${mod_description}'''
     modId="minecraft"
     type="required"
     versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.${mod_id}]]
+    modId="create"
+    type="required"
+    versionRange="[6.0.0,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.${mod_id}]]
+    modId="ftbultimine"
+    type="required"
+    versionRange="[2101.1.1,)"
     ordering="NONE"
     side="BOTH"
 
