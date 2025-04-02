@@ -14,9 +14,9 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.item.crafting.RecipeType
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
+import net.minecraftforge.event.entity.player.PlayerInteractEvent
 
 object RightClickHandlers {
     fun isManualApplicable(level: Level, blockState: BlockState, heldItem: ItemStack): ManualApplicationRecipe? =
@@ -28,31 +28,19 @@ object RightClickHandlers {
         player: ServerPlayer,
         hand: InteractionHand,
         clickPos: BlockPos,
-        recipe: ManualApplicationRecipe,
+        blockHitResult: BlockHitResult,
         data: FTBUltiminePlayerData,
     ): Int {
-        var recipe = recipe
         var didWork = 0
-        val heldItem = player.getItemInHand(hand)
         val level = player.level()
 
         for (pos in data.cachedPositions()) {
-            val (applicationResult, updatedRecipe) = manualApplicationRecipesApplyInWorld(
-                level,
-                player,
-                hand,
-                heldItem,
-                pos,
-                recipe
-            )
+            blockHitResult.withPosition(pos)
+            val simulatedClickEvent = PlayerInteractEvent.RightClickBlock(player, hand, pos, blockHitResult)
+            ManualApplicationRecipe.manualApplicationRecipesApplyInWorld(simulatedClickEvent)
 
-            recipe = updatedRecipe ?: break
-
-            if (applicationResult) didWork++
-            else continue
-
-            if (heldItem.isEmpty)
-                break
+            if (simulatedClickEvent.isCancelable && simulatedClickEvent.isCanceled) didWork++
+            else break
         }
 
         if (didWork > 0) {
@@ -91,48 +79,5 @@ object RightClickHandlers {
         data.isPressed = isPressed
 
         return didWork
-    }
-
-    private fun manualApplicationRecipesApplyInWorld(
-        level: Level,
-        player: ServerPlayer,
-        hand: InteractionHand,
-        heldItem: ItemStack,
-        pos: BlockPos,
-        cachedRecipe: ManualApplicationRecipe
-    ): Pair<Boolean, ManualApplicationRecipe?> {
-        var recipe = cachedRecipe
-        val blockState = level.getBlockState(pos)
-
-        if (heldItem.isEmpty)
-            return false to recipe
-        if (blockState.isAir)
-            return false to recipe
-
-        level.destroyBlock(pos, false)
-
-        if (!(recipe.testBlock(blockState) && recipe.ingredients[1].test(heldItem))) {
-            // Mismatched find other recipes or fail
-            recipe = level.recipeManager
-                .getAllRecipesFor(AllRecipeTypes.ITEM_APPLICATION.getType<RecipeType<ManualApplicationRecipe>>())
-                .firstOrNull { it.testBlock(blockState) && it.ingredients[1].test(heldItem) } ?: return false to null
-        }
-
-        val transformedBlock = recipe.transformBlock(blockState)
-        level.setBlock(pos, transformedBlock, 3)
-        recipe.rollResults()
-            .forEach { Block.popResource(level, pos, it) }
-
-        val unbreakable = heldItem.tag?.getBoolean("Unbreakable") == true
-        val keepHeld = recipe.shouldKeepHeldItem() || player.isCreative
-
-        if (!unbreakable && !keepHeld) {
-            if (heldItem.isDamageableItem)
-                heldItem.hurtAndBreak(1, player) { it.broadcastBreakEvent(hand) }
-            else
-                heldItem.shrink(1)
-        }
-
-        return true to recipe
     }
 }
