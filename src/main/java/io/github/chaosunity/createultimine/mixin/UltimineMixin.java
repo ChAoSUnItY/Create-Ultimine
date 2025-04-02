@@ -52,7 +52,7 @@ public class UltimineMixin {
             int didWork = 0;
 
             if (CreateUltimineServerConfig.getRIGHT_CLICK_ALLOY().get() && recipe != null) {
-                didWork = RightClickHandlers.INSTANCE.itemApplication(serverPlayer, hand, clickPos, recipe, data);
+                didWork = RightClickHandlers.INSTANCE.itemApplication(serverPlayer, hand, blockHitResult, data);
             } else if (CreateUltimineServerConfig.getRIGHT_CLICK_WRENCH().get() && serverPlayer.getItemInHand(hand).getItem() == AllItems.WRENCH.get()) {
                 didWork = RightClickHandlers.INSTANCE.onWrenchUse(serverPlayer, hand, blockHitResult, data);
             }

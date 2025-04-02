@@ -3,7 +3,6 @@
   "package": "io.github.chaosunity.createultimine.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "ManualApplicationRecipeAccessor",
     "UltimineMixin"
   ],
   "client": [
