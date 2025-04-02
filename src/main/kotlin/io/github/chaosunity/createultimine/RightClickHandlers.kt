@@ -4,6 +4,7 @@ import com.simibubi.create.AllRecipeTypes
 import com.simibubi.create.content.equipment.wrench.WrenchItem
 import com.simibubi.create.content.kinetics.deployer.ManualApplicationRecipe
 import dev.ftb.mods.ftbultimine.FTBUltiminePlayerData
+import io.github.chaosunity.createultimine.mixin.ManualApplicationRecipeAccessor
 import net.minecraft.core.BlockPos
 import net.minecraft.core.component.DataComponents
 import net.minecraft.server.level.ServerPlayer
@@ -148,6 +149,7 @@ object RightClickHandlers {
                 heldItem.shrink(1)
         }
 
+        ManualApplicationRecipeAccessor.invokeAwardAdvancements(player, transformedBlock)
         return true to recipe
     }
 }
