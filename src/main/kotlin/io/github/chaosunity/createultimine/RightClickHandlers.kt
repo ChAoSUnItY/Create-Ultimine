@@ -4,10 +4,7 @@ import com.simibubi.create.AllRecipeTypes
 import com.simibubi.create.content.equipment.wrench.WrenchItem
 import com.simibubi.create.content.kinetics.deployer.ManualApplicationRecipe
 import dev.ftb.mods.ftbultimine.FTBUltiminePlayerData
-import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.sounds.SoundEvents
-import net.minecraft.sounds.SoundSource
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.item.ItemStack
@@ -27,12 +24,10 @@ object RightClickHandlers {
     fun itemApplication(
         player: ServerPlayer,
         hand: InteractionHand,
-        clickPos: BlockPos,
         blockHitResult: BlockHitResult,
         data: FTBUltiminePlayerData,
     ): Int {
         var didWork = 0
-        val level = player.level()
 
         for (pos in data.cachedPositions()) {
             blockHitResult.withPosition(pos)
@@ -41,10 +36,6 @@ object RightClickHandlers {
 
             if (simulatedClickEvent.isCancelable && simulatedClickEvent.isCanceled) didWork++
             else break
-        }
-
-        if (didWork > 0) {
-            level.playSound(null, clickPos, SoundEvents.COPPER_BREAK, SoundSource.BLOCKS, 1f, 1f)
         }
 
         return didWork
