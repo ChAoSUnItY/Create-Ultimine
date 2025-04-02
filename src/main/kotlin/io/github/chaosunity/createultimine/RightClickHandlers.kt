@@ -15,16 +15,14 @@ import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.item.crafting.RecipeType
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
+import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
 
 object RightClickHandlers {
-    fun isManualApplicable(level: Level, heldItem: ItemStack): ManualApplicationRecipe? {
-        val recipeManager = level.recipeManager
-        val recipes =
-            recipeManager.getAllRecipesFor(AllRecipeTypes.ITEM_APPLICATION.getType<RecipeType<ManualApplicationRecipe>>())
-
-        return recipes.firstOrNull { it.requiredHeldItem.test(heldItem) }
-    }
+    fun isManualApplicable(level: Level, blockState: BlockState, heldItem: ItemStack): ManualApplicationRecipe? =
+        level.recipeManager
+            .getAllRecipesFor(AllRecipeTypes.ITEM_APPLICATION.getType<RecipeType<ManualApplicationRecipe>>())
+            .firstOrNull { it.testBlock(blockState) && it.ingredients[1].test(heldItem) }
 
     fun itemApplication(
         player: ServerPlayer,

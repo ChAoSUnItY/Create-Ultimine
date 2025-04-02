@@ -14,6 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.spongepowered.asm.mixin.Mixin;
@@ -44,11 +45,16 @@ public class UltimineMixin {
             BlockHitResult blockHitResult,
             ShapeContext shapeContext) {
         if (shapeContext != null && data.isPressed() && data.hasCachedPositions()) {
-            ManualApplicationRecipe recipe;
+            Level level = serverPlayer.level();
+            ManualApplicationRecipe recipe = RightClickHandlers.INSTANCE
+                    .isManualApplicable(
+                            level,
+                            level.getBlockState(clickPos),
+                            serverPlayer.getItemInHand(hand)
+                    );
             int didWork = 0;
 
-            if (CreateUltimineServerConfig.getRIGHT_CLICK_ALLOY().get() &&
-                    (recipe = RightClickHandlers.INSTANCE.isManualApplicable(serverPlayer.level(), serverPlayer.getItemInHand(hand))) != null) {
+            if (CreateUltimineServerConfig.getRIGHT_CLICK_ALLOY().get() && recipe != null) {
                 didWork = RightClickHandlers.INSTANCE.itemApplication(serverPlayer, hand, clickPos, recipe, data);
             } else if (CreateUltimineServerConfig.getRIGHT_CLICK_WRENCH().get() && serverPlayer.getItemInHand(hand).getItem() == AllItems.WRENCH.get()) {
                 didWork = RightClickHandlers.INSTANCE.onWrenchUse(serverPlayer, hand, blockHitResult, data);
