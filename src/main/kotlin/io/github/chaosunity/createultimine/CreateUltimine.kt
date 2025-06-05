@@ -1,14 +1,8 @@
 package io.github.chaosunity.createultimine
 
-import dev.architectury.event.events.common.LifecycleEvent
-import dev.architectury.event.events.common.PlayerEvent
-import dev.architectury.networking.NetworkManager
-import dev.ftb.mods.ftblibrary.snbt.SNBTCompoundTag
-import dev.ftb.mods.ftbultimine.net.SyncConfigFromServerPacket
-import dev.ftb.mods.ftbultimine.shape.ShapeRegistry
+import dev.ftb.mods.ftblibrary.config.manager.ConfigManager
+import dev.ftb.mods.ftbultimine.api.rightclick.RegisterRightClickHandlerEvent
 import io.github.chaosunity.createultimine.config.CreateUltimineServerConfig
-import net.minecraft.server.MinecraftServer
-import net.minecraft.server.level.ServerPlayer
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.common.Mod
 import org.apache.logging.log4j.LogManager
@@ -24,18 +18,12 @@ class CreateUltimine {
     }
 
     init {
-        PlayerEvent.PLAYER_JOIN.register(::onPlayerJoin)
-        LifecycleEvent.SERVER_BEFORE_START.register(::serverStarting)
+        ConfigManager.getInstance().registerServerConfig(CreateUltimineServerConfig.CONFIG, "$ID.server_settings", true)
+        RegisterRightClickHandlerEvent.REGISTER.register(::registerBuiltinHandlers)
     }
 
-    private fun onPlayerJoin(serverPlayer: ServerPlayer) {
-        val config = SNBTCompoundTag()
-        CreateUltimineServerConfig.CONFIG.write(config)
-        NetworkManager.sendToPlayer(serverPlayer, SyncConfigFromServerPacket(config))
-    }
-
-    private fun serverStarting(server: MinecraftServer) {
-        ShapeRegistry.freeze();
-        CreateUltimineServerConfig.load(server);
+    private fun registerBuiltinHandlers(dispatcher: RegisterRightClickHandlerEvent.Dispatcher) {
+        dispatcher.registerHandler(ManualApplication)
+        dispatcher.registerHandler(WrenchUse)
     }
 }
