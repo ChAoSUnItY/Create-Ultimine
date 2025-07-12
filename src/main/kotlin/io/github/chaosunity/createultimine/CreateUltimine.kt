@@ -9,7 +9,6 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
 @Mod(CreateUltimine.ID)
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 class CreateUltimine {
     companion object {
         const val ID = "createultimine"
