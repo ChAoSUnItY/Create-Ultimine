@@ -1,5 +1,6 @@
 package io.github.chaosunity.createultimine
 
+import com.simibubi.create.AllTags.AllItemTags
 import com.simibubi.create.content.equipment.wrench.WrenchItem
 import dev.ftb.mods.ftbultimine.FTBUltimine
 import dev.ftb.mods.ftbultimine.FTBUltiminePlayerData
@@ -21,13 +22,16 @@ object WrenchUse : RightClickHandler {
         val player = shapeContext.player
         val itemStack = player.getItemInHand(hand)
 
-        if (!CreateUltimineServerConfig.RIGHT_CLICK_WRENCH.get() || itemStack.item !is WrenchItem)
+        if (!CreateUltimineServerConfig.RIGHT_CLICK_WRENCH.get() ||
+            itemStack.item !is WrenchItem ||
+            !AllItemTags.WRENCH.matches(itemStack.item)
+        )
             return 0
 
         var didWork = 0
         val blockHitResult = FTBUltiminePlayerData.rayTrace(player) as? BlockHitResult ?: return 0
         val playerData = FTBUltimine.instance.getOrCreatePlayerData(player)
-        val isPressed =  playerData.isPressed
+        val isPressed = playerData.isPressed
         playerData.isPressed = false
 
         for (pos in positions) {

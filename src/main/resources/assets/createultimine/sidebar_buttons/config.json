@@ -1,0 +1,8 @@
+{
+  "icon": [
+    "ftblibrary:icons/settings; tint=#FFC0C0FF",
+    "item:create:wrench"
+  ],
+  "sort_index": 700,
+  "click": ["command:/createultimine config"]
+}
