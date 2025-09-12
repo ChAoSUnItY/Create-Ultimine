@@ -1,6 +1,7 @@
 package io.github.chaosunity.createultimine
 
 import com.simibubi.create.AllRecipeTypes
+import com.simibubi.create.AllTags
 import com.simibubi.create.content.equipment.wrench.WrenchItem
 import com.simibubi.create.content.kinetics.deployer.ManualApplicationRecipe
 import dev.ftb.mods.ftbultimine.FTBUltiminePlayerData
@@ -50,7 +51,8 @@ object RightClickHandlers {
         var didWork = 0
         val itemStack = player.getItemInHand(hand)
 
-        if (itemStack.item !is WrenchItem)
+        if (itemStack.item !is WrenchItem ||
+            !AllTags.AllItemTags.WRENCH.matches(itemStack))
             return 0
 
         val isPressed = data.isPressed
