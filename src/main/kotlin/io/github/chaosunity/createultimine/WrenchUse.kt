@@ -1,6 +1,5 @@
 package io.github.chaosunity.createultimine
 
-import com.simibubi.create.AllTags.AllItemTags
 import com.simibubi.create.content.equipment.wrench.WrenchItem
 import dev.ftb.mods.ftbultimine.FTBUltimine
 import dev.ftb.mods.ftbultimine.FTBUltiminePlayerData
@@ -12,6 +11,7 @@ import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.phys.BlockHitResult
+import net.neoforged.neoforge.common.Tags
 
 object WrenchUse : RightClickHandler {
     override fun handleRightClickBlock(
@@ -24,7 +24,7 @@ object WrenchUse : RightClickHandler {
 
         if (!CreateUltimineServerConfig.RIGHT_CLICK_WRENCH.get() ||
             itemStack.item !is WrenchItem ||
-            !AllItemTags.WRENCH.matches(itemStack.item)
+            !itemStack.`is`(Tags.Items.TOOLS_WRENCH)
         )
             return 0
 

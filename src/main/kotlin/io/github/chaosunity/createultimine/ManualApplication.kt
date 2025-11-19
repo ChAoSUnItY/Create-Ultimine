@@ -98,9 +98,9 @@ object ManualApplication : RightClickHandler {
                 }?.value as? ManualApplicationRecipe ?: return false to null
         }
 
-        val transformedBlock = recipe.transformBlock(blockState)
+        val transformedBlock = recipe.transformBlock(blockState, level.random)
         level.setBlock(pos, transformedBlock, 3)
-        recipe.rollResults()
+        recipe.rollResults(level.random)
             .forEach { Block.popResource(level, pos, it) }
 
         val unbreakable = heldItem.has(DataComponents.UNBREAKABLE)
