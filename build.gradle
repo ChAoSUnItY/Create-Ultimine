@@ -95,6 +95,12 @@ repositories {
     maven { url = "https://mvn.devos.one/snapshots" } // Registrate
     maven { url = "https://maven.ftb.dev/releases" } // FTB Mods
     maven { url = "https://maven.architectury.dev" } // Arch API
+    maven {
+        url "https://maven.squiddev.cc"
+        content {
+            includeGroup("cc.tweaked")
+        }
+    }
 
     exclusiveContent {
         forRepository {
