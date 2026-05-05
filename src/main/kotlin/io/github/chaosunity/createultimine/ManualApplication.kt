@@ -26,7 +26,7 @@ object ManualApplication : RightClickHandler {
 
         return level.recipeManager
             .getAllRecipesFor(recipeType)
-            .firstOrNull { it ->
+            .firstOrNull {
                 val mar = it.value as ManualApplicationRecipe
                 mar.testBlock(blockState) && mar.ingredients[1].test(heldItem)
             }?.value as? ManualApplicationRecipe
