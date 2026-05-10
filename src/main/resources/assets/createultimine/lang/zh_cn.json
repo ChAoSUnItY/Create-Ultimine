@@ -1,0 +1,6 @@
+{
+  "sidebar_button.createultimine.config": "Create Ultimine 配置",
+  "createultimine.server_settings": "Create Ultimine 服务器配置",
+  "createultimine.server_settings.features.manual_application": "手动应用：鼠标右击以对多个方块应用物品",
+  "createultimine.server_settings.features.right_click_wrench": "扳手功能：鼠标右击以调整多个方块"
+}
