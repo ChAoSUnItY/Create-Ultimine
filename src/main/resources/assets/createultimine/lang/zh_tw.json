@@ -1,0 +1,6 @@
+{
+  "sidebar_button.createultimine.config": "《Create Ultimine》設定",
+  "createultimine.server_settings": "《Create Ultimine》伺服器設定",
+  "createultimine.server_settings.features.manual_application": "手動使用物品：右鍵可同時對多個方塊使用物品",
+  "createultimine.server_settings.features.right_click_wrench": "扳手：右鍵可同時調整多個方塊"
+}
