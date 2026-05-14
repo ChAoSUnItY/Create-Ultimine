@@ -30,13 +30,13 @@ description='''${mod_description}'''
 [[dependencies.${mod_id}]]
     modId="create"
     type="required"
-    versionRange="[6.0.8,)"
+    versionRange="[6.0.10,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.${mod_id}]]
     modId="ftbultimine"
     type="required"
-    versionRange="[2101.1.3,)"
+    versionRange="[2101.1.14,)"
     ordering="NONE"
     side="BOTH"
 

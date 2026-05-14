@@ -122,7 +122,7 @@ dependencies {
     implementation "com.simibubi.create:create-1.21.1:6.0.10-281:slim"
 
     runtimeOnly "dev.architectury:architectury-neoforge:13.0.8"
-    implementation "dev.ftb.mods:ftb-ultimine-neoforge:2101.1.12"
+    implementation "dev.ftb.mods:ftb-ultimine-neoforge:2101.1.14"
 }
 
 tasks.withType(ProcessResources).configureEach {

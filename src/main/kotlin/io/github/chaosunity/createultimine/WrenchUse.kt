@@ -30,7 +30,7 @@ object WrenchUse : RightClickHandler {
 
         var didWork = 0
         val blockHitResult = FTBUltiminePlayerData.rayTrace(player) as? BlockHitResult ?: return 0
-        val playerData = FTBUltimine.instance.getOrCreatePlayerData(player)
+        val playerData = FTBUltimine.getInstance().getOrCreatePlayerData(player)
         val isPressed = playerData.isPressed
         playerData.isPressed = false
 
