@@ -64,7 +64,7 @@ public class UltimineMixin {
                 player.swing(hand);
                 if (!player.isCreative()) {
                     CooldownTracker.setLastUltimineTime(player, System.currentTimeMillis());
-                    data.addPendingXPCost(Math.max(0, didWork - 1));
+                    data.addPendingXPCost(serverPlayer, Math.max(0, didWork - 1));
                 }
 
                 cir.setReturnValue(EventResult.interruptFalse());
