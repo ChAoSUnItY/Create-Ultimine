@@ -1,0 +1,6 @@
+{
+  "sidebar_button.createultimine.config": "Конфігурації Create Ultimine",
+  "createultimine.server_settings": "Серверні конфігурації Create Ultimine",
+  "createultimine.server_settings.features.manual_application": "Ручне застосування: Ви можете масово виконувати рецепти ручного застосування",
+  "createultimine.server_settings.features.right_click_wrench": "Гайковий ключ: Ви можете масово взаємодіяти з предметами гайковим ключем"
+}
