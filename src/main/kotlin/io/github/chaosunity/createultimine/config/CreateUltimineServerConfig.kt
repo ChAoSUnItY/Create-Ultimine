@@ -14,9 +14,18 @@ object CreateUltimineServerConfig {
     val FEATURES: SNBTConfig = CONFIG.addGroup("features")
 
     @JvmStatic
-    val MANUAL_APPLICATION: BooleanValue = FEATURES
-        .addBoolean("manual_application", true)
-        .comment("Right-click with any applicable items held in hand with the Ultimine key held to apply onto any blocks")
+    val MANUAL_APPLICATIONS: StringBooleanMapValue = FEATURES
+        .add(
+            StringBooleanMapValue(
+                FEATURES,
+                "manual_applications",
+                mapOf()
+            )
+        )
+        .comment(
+            "Right-click with any applicable items held in hand with the Ultimine key held to apply onto any blocks",
+            "Entries will be updated once addition / deletion of datapack / mod triggers a recipe reload"
+        )
 
     @JvmStatic
     val RIGHT_CLICK_WRENCH: BooleanValue = FEATURES

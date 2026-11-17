@@ -7,29 +7,42 @@ import dev.ftb.mods.ftbultimine.api.shape.ShapeContext
 import io.github.chaosunity.createultimine.config.CreateUltimineServerConfig
 import net.minecraft.core.BlockPos
 import net.minecraft.core.component.DataComponents
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.packs.resources.ResourceManager
+import net.minecraft.server.packs.resources.SimplePreparableReloadListener
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
+import net.minecraft.util.profiling.ProfilerFiller
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.crafting.Recipe
 import net.minecraft.world.item.crafting.RecipeType
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.state.BlockState
-import net.neoforged.neoforge.items.wrapper.RecipeWrapper
+import net.neoforged.neoforge.event.AddReloadListenerEvent
 
 object ManualApplication : RightClickHandler {
     fun isManualApplicable(level: Level, blockState: BlockState, heldItem: ItemStack): ManualApplicationRecipe? {
-        val recipeType: RecipeType<Recipe<RecipeWrapper>> = AllRecipeTypes.ITEM_APPLICATION.getType()
-
-        return level.recipeManager
+        val recipeType: RecipeType<ManualApplicationRecipe> = AllRecipeTypes.ITEM_APPLICATION.getType()
+        // This will respect overlapped recipes, though in practice, recipe design should not have this
+        // at the beginning
+        val recipe = level.recipeManager
             .getAllRecipesFor(recipeType)
-            .firstOrNull {
-                val mar = it.value as ManualApplicationRecipe
-                mar.testBlock(blockState) && mar.ingredients[1].test(heldItem)
-            }?.value as? ManualApplicationRecipe
+            .firstNotNullOfOrNull {
+                val mar = it.value
+
+                if (!(mar.testBlock(blockState) && mar.ingredients[1].test(heldItem)))
+                    return@firstNotNullOfOrNull null
+
+                if (CreateUltimineServerConfig.MANUAL_APPLICATIONS.get()[it.id().toString()] != true)
+                    return@firstNotNullOfOrNull null
+
+                return@firstNotNullOfOrNull it
+            } ?: return null
+
+        return recipe.value
     }
 
     override fun handleRightClickBlock(
@@ -37,17 +50,14 @@ object ManualApplication : RightClickHandler {
         hand: InteractionHand,
         positions: Collection<BlockPos>
     ): Int {
-        if (!CreateUltimineServerConfig.MANUAL_APPLICATION.get())
-            return 0
-
         val player = shapeContext.player
         val level = player.level()
         var didWork = 0
         val heldItem = player.getItemInHand(hand)
 
         for (pos in positions) {
-            val recipe = isManualApplicable(level, level.getBlockState(pos), heldItem) ?: break
-            val (applicationResult, _) = manualApplicationRecipesApplyInWorld(
+            val recipe = isManualApplicable(level, level.getBlockState(pos), heldItem) ?: continue
+            val applicationResult = manualApplicationRecipesApplyInWorld(
                 level,
                 player,
                 hand,
@@ -74,30 +84,16 @@ object ManualApplication : RightClickHandler {
         hand: InteractionHand,
         heldItem: ItemStack,
         pos: BlockPos,
-        cachedRecipe: ManualApplicationRecipe
-    ): Pair<Boolean, ManualApplicationRecipe?> {
-        var recipe = cachedRecipe
+        recipe: ManualApplicationRecipe
+    ): Boolean {
         val blockState = level.getBlockState(pos)
 
         if (heldItem.isEmpty)
-            return false to recipe
+            return false
         if (blockState.isAir)
-            return false to recipe
+            return false
 
         level.destroyBlock(pos, false)
-
-        if (!(recipe.testBlock(blockState) && recipe.ingredients[1].test(heldItem))) {
-            // Mismatched find other recipes or fail
-            val recipeType: RecipeType<Recipe<RecipeWrapper>> = AllRecipeTypes.ITEM_APPLICATION.getType()
-
-            recipe = level.recipeManager
-                .getAllRecipesFor(recipeType)
-                .firstOrNull { it ->
-                    val mar = it.value as ManualApplicationRecipe
-                    mar.testBlock(blockState) && mar.ingredients[1].test(heldItem)
-                }?.value as? ManualApplicationRecipe ?: return false to null
-        }
-
         val transformedBlock = recipe.transformBlock(blockState, level.random)
         level.setBlock(pos, transformedBlock, 3)
         recipe.rollResults(level.random)
@@ -113,6 +109,46 @@ object ManualApplication : RightClickHandler {
                 heldItem.shrink(1)
         }
 
-        return true to recipe
+        return true
+    }
+
+    object ManualApplicationSettings {
+        fun registerListener(event: AddReloadListenerEvent) {
+            event.addListener(object : SimplePreparableReloadListener<Unit>() {
+                override fun prepare(
+                    manager: ResourceManager,
+                    profiler: ProfilerFiller
+                ) = Unit
+
+                override fun apply(
+                    data: Unit,
+                    manager: ResourceManager,
+                    profiler: ProfilerFiller
+                ) {
+                    val recipeType: RecipeType<ManualApplicationRecipe> = AllRecipeTypes.ITEM_APPLICATION.getType()
+                    val cachedConfig = CreateUltimineServerConfig
+                        .MANUAL_APPLICATIONS
+                        .get()
+                    val cachedIds = cachedConfig
+                        .mapNotNull { ResourceLocation.tryParse(it.key) }
+                        .toSet()
+                    val loadedIds = event.serverResources.recipeManager
+                        .getAllRecipesFor(recipeType)
+                        .map { it.id }
+                        .toSet()
+
+                    val recipeIds = loadedIds - cachedIds
+                    val updatedConfig = cachedConfig.filter {
+                        ResourceLocation.tryParse(it.key)?.let(loadedIds::contains) == true
+                    }.toMutableMap()
+
+                    for (id in recipeIds) {
+                        updatedConfig.putIfAbsent(id.toString(), true)
+                    }
+
+                    CreateUltimineServerConfig.MANUAL_APPLICATIONS.set(updatedConfig)
+                }
+            })
+        }
     }
 }

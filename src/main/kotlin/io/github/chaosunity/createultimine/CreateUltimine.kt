@@ -5,6 +5,7 @@ import dev.ftb.mods.ftblibrary.config.manager.ConfigManager
 import dev.ftb.mods.ftbultimine.api.rightclick.RegisterRightClickHandlerEvent
 import io.github.chaosunity.createultimine.config.CreateUltimineServerConfig
 import net.neoforged.fml.common.Mod
+import net.neoforged.neoforge.common.NeoForge
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
@@ -20,6 +21,8 @@ class CreateUltimine {
         ConfigManager.getInstance().registerServerConfig(CreateUltimineServerConfig.CONFIG, "$ID.server_settings", true)
         RegisterRightClickHandlerEvent.REGISTER.register(::registerBuiltinHandlers)
         CommandRegistrationEvent.EVENT.register(CreateUltimineCommands::registerCommands)
+
+        NeoForge.EVENT_BUS.addListener(ManualApplication.ManualApplicationSettings::registerListener)
     }
 
     private fun registerBuiltinHandlers(dispatcher: RegisterRightClickHandlerEvent.Dispatcher) {
