@@ -28,5 +28,6 @@ class CreateUltimine {
     private fun registerBuiltinHandlers(dispatcher: RegisterRightClickHandlerEvent.Dispatcher) {
         dispatcher.registerHandler(ManualApplication)
         dispatcher.registerHandler(WrenchUse)
+        dispatcher.registerHandler(CopycatApplication)
     }
 }

@@ -14,9 +14,9 @@ object CreateUltimineServerConfig {
     val FEATURES: SNBTConfig = CONFIG.addGroup("features")
 
     @JvmStatic
-    val MANUAL_APPLICATIONS: StringBooleanMapValue = FEATURES
+    val MANUAL_APPLICATIONS: RecipeToggleMapValue = FEATURES
         .add(
-            StringBooleanMapValue(
+            RecipeToggleMapValue(
                 FEATURES,
                 "manual_applications",
                 mapOf()
@@ -31,4 +31,9 @@ object CreateUltimineServerConfig {
     val RIGHT_CLICK_WRENCH: BooleanValue = FEATURES
         .addBoolean("right_click_wrench", true)
         .comment("Right-click with an wrench with the Ultimine key held to interact blocks (e.g. rotate, breaking)")
+
+    @JvmStatic
+    val COPYCAT_APPLICATION: BooleanValue = FEATURES
+        .addBoolean("copycat_application", true)
+        .comment("Right-click on the copycat blocks with the held material to apply onto")
 }
