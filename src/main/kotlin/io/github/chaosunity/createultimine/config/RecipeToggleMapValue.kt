@@ -15,6 +15,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.crafting.Ingredient
 import net.neoforged.api.distmarker.Dist
 import net.neoforged.api.distmarker.OnlyIn
+import net.neoforged.fml.ModList
 import kotlin.jvm.optionals.getOrNull
 
 class RecipeToggleMapValue(config: SNBTConfig?, name: String, def: Map<String, Boolean>) :
@@ -50,7 +51,20 @@ class RecipeToggleMapValue(config: SNBTConfig?, name: String, def: Map<String, B
         val group = group?.getOrCreateSubgroup(key)
 
         for ((key, value) in get()) {
-            val configEntry = group?.add(key, RecipeToggleConfig(key), value, {
+            val recipeResourceLocation = ResourceLocation.tryParse(key)
+            val modGroup = recipeResourceLocation?.run {
+                val group = group?.getOrCreateSubgroup(namespace)
+
+                group?.nameKey = ModList
+                    .get()
+                    .getModContainerById(namespace)
+                    .getOrNull()
+                    ?.modInfo
+                    ?.displayName
+                group
+            } ?: group
+
+            val configEntry = modGroup?.add(key, RecipeToggleConfig(key), value, {
                 val modified = get().toMutableMap()
                 modified[key] = it
                 set(modified)
