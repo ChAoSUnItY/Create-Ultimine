@@ -1,0 +1,12 @@
+{
+  "sidebar_button.createultimine.config": "Create Ultimine Config",
+  "createultimine.server_settings": "Create Ultimine Server Config",
+  "createultimine.server_settings.features": "Features",
+  "createultimine.server_settings.features.manual_applications": "Manual Application",
+  "createultimine.server_settings.features.right_click_wrench": "Wrench: Right-click to adjust multiple blocks",
+  "createultimine.server_settings.features.copycat_application": "Copycat Application: Right-click to apply material onto multiple copycat blocks",
+  "createultimine.config.apply.tooltip": "Applies:",
+  "createultimine.config.onto.tooltip": "Onto:",
+  "createultimine.config.produce.tooltip": "Produces:",
+  "createultimine.config.more.tooltip": "And more..."
+}

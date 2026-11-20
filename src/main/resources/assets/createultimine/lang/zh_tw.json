@@ -1,0 +1,12 @@
+{
+  "sidebar_button.createultimine.config": "《Create Ultimine》設定",
+  "createultimine.server_settings": "《Create Ultimine》伺服器設定",
+  "createultimine.server_settings.features": "功能",
+  "createultimine.server_settings.features.manual_applications": "手動使用物品",
+  "createultimine.server_settings.features.right_click_wrench": "扳手：右鍵可同時調整多個方塊",
+  "createultimine.server_settings.features.copycat_application": "偽裝應用：右鍵可同時應用手持物品的材質至多個偽裝方塊上",
+  "createultimine.config.apply.tooltip": "使用：",
+  "createultimine.config.onto.tooltip": "應用至：",
+  "createultimine.config.produce.tooltip": "產出：",
+  "createultimine.config.more.tooltip": "更多..."
+}

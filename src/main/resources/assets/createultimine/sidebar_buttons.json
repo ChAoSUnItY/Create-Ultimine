@@ -1,0 +1,14 @@
+{
+  "config": {
+    "group": "ftblibrary:util",
+    "icon": [
+      "ftblibrary:icons/settings; tint=#FFC0C0FF",
+      "item:create:wrench"
+    ],
+    "click": "createultimine:open_config",
+    "required_server_mods": [
+      "createultimine"
+    ],
+    "custom_text": true
+  }
+}
